@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg936\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\froman\fcharset0 Times-Roman;\f2\fmodern\fcharset0 CourierNewPSMT;
+}
+{\colortbl;\red255\green255\blue255;\red83\green83\blue83;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c40000\c40000\c40000;\cssrgb\c0\c0\c0;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl440\sa106\partightenfactor0
+
+\f0\fs32 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Python
+\f1\b\fs24 \cf3 \strokec3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\b0\fs29\fsmilli14667 \cf3 In Python implementation, for the linear separable, we first review the standard form of a quadratic programming function 
+\f2 CVXOPT
+\f0 . We need to prepare our data for the following definition:
+\f1\fs24 \
+\pard\pardeftab720\sl400\qc\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 
+\f1\fs24 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 We want to obtain x which is alpha in this case. P is the Q matrix which means \'a0Q(i,j)=y(i)*y(j)*x(i)\'92*x(j). At the same time, the constraints in KKT condition need to be satisfied as listed above. Alpha is obtained by the following code:
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf3 from cvxopt import solvers 
+\f1\fs24 \
+
+\f2\fs29\fsmilli14667 sol = solvers.qp(P,q,G,h)
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 If you had A, b as well, you would call:
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf3 sol = solvers.qp(P,q,G,h,A,b)
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 We take most entries in alpha which is less than 10^-6 as 0\'92s while the indexes of remained entries greater than 0 should be append to a list. Points in those indexes are support vectors whose coordinates would help us calculate weights w with and constant b.
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 Hence, we have all the terms we need for the line equation:
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf3 w = \'a0[[ 7.25005616 -3.86188932]]
+\f1\fs24 \
+
+\f2\fs29\fsmilli14667 b = \'a0[[-0.10698729]]\uc0\u8232 \u8232 
+\f1\fs24 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 So equation will be 
+\f2 7.2500561*x1 -3.86188932*x2 -0.10698729 = 0
+\f0 .
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 The difference between considering linear separable and nonlinearly separable is that we need to \'a0change inner product of X vector in matrix Q with a function K. We choose Polynomial Kernel as kernel function:
+\f1\fs24 \
+\pard\pardeftab720\sl400\qc\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "http://api.gmath.guru/cgi-bin/gmath?%5Cdpi%7B480%7DK(x%2Cx%27)%3D(x%5E%7BT%7Dx%27%20%2B%201)%5E%7B2%7D"}}{\fldrslt 
+\f0\fs29\fsmilli14667 \cf3 }}\pard\pardeftab720\sl400\qc\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 It is the same process for getting alpha from quadratic programming function, so w and b for the equation is obtained.
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf3 w = \'a0[[ \'a08.64344226e-10 \'a0\'a01.60702131e-01 \'a0\'a01.58698040e-01 \'a0-9.47655776e-03 -3.85759106e-02 \'a0-1.10224094e-03]]
+\f1\fs24 \
+
+\f2\fs29\fsmilli14667 b = \'a0[[-16.66005249]]
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf3 So equation will be:
+\f1\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+\pard\pardeftab720\sl400\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf3 \pard\pardeftab720\sl400\partightenfactor0
+
+\f1\fs24 \cf3 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \
+}
